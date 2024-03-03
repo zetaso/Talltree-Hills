@@ -4,27 +4,31 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Vector2 velocity_multiplier;
     public Vector3 velocity;
 
     PlayerState state;
 
     void Start()
     {
-
+        state = GetComponent<PlayerState>();
     }
 
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
 
-        velocity = Vector3.up * y * 0.62f + Vector3.right * x;
+        if (x != 0 && y != 0)
+        {
+            x /= 1.4142f;
+            y /= 1.4142f;
+        }
+
+        velocity = Vector3.up * y * velocity_multiplier.y + Vector3.right * x * velocity_multiplier.x;
 
         transform.position += velocity * Time.deltaTime;
 
-        if (velocity.sqrMagnitude > 0.01f)
-        {
-            state.TrySetState("moving", true);
-        }
+        state.TrySetState("moving", velocity.sqrMagnitude > 0.01f);
     }
 }

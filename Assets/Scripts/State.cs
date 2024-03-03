@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
-    Dictionary<string, float> states = new Dictionary<string, float>();
+    public List<string> all_states;
+    Dictionary<string, float> states;
+
+    void Awake()
+    {
+        states = new Dictionary<string, float>();
+        for (int i = 0; i < all_states.Count; i++)
+        {
+            states.Add(all_states[i], 0f);
+        }
+    }
 
     public bool TrySetState(string state, float value)
     {
@@ -34,6 +44,14 @@ public class State : MonoBehaviour
             return states[state];
         else
             return 0f;
+    }
+
+    public bool GetStateBool(string state)
+    {
+        if (states.ContainsKey(state))
+            return states[state] > 0f;
+        else
+            return false;
     }
 
     public bool IsState(string state)
