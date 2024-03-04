@@ -44,6 +44,6 @@ public class Crosshair : MonoBehaviour
 
     float Ease(float x)
     {
-        return 1 - Mathf.Pow(1 - x, 3);
+        return 1 - Mathf.Pow(1 - x, 4);
     }
 }

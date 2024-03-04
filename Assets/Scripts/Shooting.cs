@@ -1,20 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
+    public int max_ammo;
     public Crosshair crosshair;
+    public GameObject shoot_flash;
     public float aiming_accuracy_time;
+    public float accuracy_lose_on_shoot;
+    public AmmoUI ammoUI;
 
     PlayerState state;
     bool cursor_visibility = false;
     float accuracy;
+    int ammo;
 
     void Start()
     {
         state = GetComponent<PlayerState>();
         Cursor.visible = cursor_visibility;
+        ammo = max_ammo;
     }
 
     void Update()
@@ -36,6 +43,7 @@ public class Shooting : MonoBehaviour
         {
             accuracy = 0;
             crosshair.TransitionAccuracy(accuracy);
+            ammoUI.KeepVisible();
         }
         else if (aiming)
         {
@@ -50,9 +58,31 @@ public class Shooting : MonoBehaviour
                 angle -= 360f;
 
             state.TrySetState("direction", angle / 360f);
+            ammoUI.KeepVisible();
         }
 
-        bool on_shoot = aiming && Input.GetMouseButton(0);
+        bool shooting = state.GetStateBool("shooting");
+        bool on_shoot = aiming && !shooting && ammo > 0 && Input.GetMouseButtonDown(0);
+
+        if (on_shoot)
+        {
+            accuracy = Mathf.Max(0, accuracy - accuracy_lose_on_shoot);
+            crosshair.TransitionAccuracy(accuracy);
+            Transform flash = Instantiate(shoot_flash, transform.position, Quaternion.identity).transform;
+            int flash_index = (int)(state.GetState("direction") * 8f + 0.5f);
+
+            if (flash_index > 7)
+                flash_index -= 8;
+            else if (flash_index < 0)
+                flash_index += 8;
+
+            flash.GetChild(flash_index).gameObject.SetActive(true);
+            Destroy(flash.gameObject, 0.125f);
+
+            ammo--;
+            ammoUI.SetAmmo(ammo);
+            ammoUI.KeepVisible();
+        }
 
         state.TrySetState("aiming", aiming);
         state.TrySetState("on_shoot", on_shoot);
