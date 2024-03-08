@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class StaminaUI : FloatingUI
 {
+    public Transform bar;
+
     public void SetStamina(float stamina)
     {
-        sprites[1].transform.localScale = new Vector3(stamina, 1, 1);
+        bar.localScale = new Vector3(stamina, 1, 1);
     }
 }

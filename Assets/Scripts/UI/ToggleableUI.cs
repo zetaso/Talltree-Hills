@@ -17,9 +17,7 @@ public class ToggleableUI : MonoBehaviour
     void Awake()
     {
         foreach (var item in floatingUIs)
-        {
             item.SetToggleableUI(this);
-        }
     }
 
     void Update()
@@ -55,14 +53,11 @@ public class ToggleableUI : MonoBehaviour
 
         if (alpha != 1)
             appearing = true;
-
     }
 
     void SetAlpha(float value)
     {
         foreach (var item in floatingUIs)
-        {
             item.SetAlpha(value);
-        }
     }
 }
