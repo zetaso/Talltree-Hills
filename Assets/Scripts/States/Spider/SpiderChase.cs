@@ -18,6 +18,7 @@ public class SpiderChase : State
         is_complete = true;
 
         spider.animator.Play(clip_name);
+        spider.animator.speed = 1;
         chase_timeout = Random.Range(min_chase_timeout, max_chase_timeout);
     }
 

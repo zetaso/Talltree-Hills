@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour
     public State state { get; private set; }
 
     public Rigidbody2D rb;
+    public Collider2D col;
     public Animator animator;
     public Direction direction;
     public StaminaUI staminaUI;
@@ -32,6 +33,9 @@ public class Movement : MonoBehaviour
             GetNextState();
 
         state.Do();
+
+        if (state != walk && state != run)
+            rb.velocity = Vector2.zero;
     }
 
     void GetNextState()

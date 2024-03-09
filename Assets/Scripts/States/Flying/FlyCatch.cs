@@ -7,7 +7,8 @@ public class FlyCatch : State
     protected Flying flying;
     public string clip_name;
 
-    public float time_in_ground;
+    public Action action;
+    public float time_in_ground, catch_range;
     public Collider2D ground_collider;
 
     public override void Trigger() { }
@@ -19,11 +20,17 @@ public class FlyCatch : State
 
         flying.animator.Play(clip_name);
         ground_collider.enabled = true;
+
+        if (Vector2.Scale(flying.player.position - flying.transform.position, new Vector2(1, 2)).magnitude <= catch_range)
+        {
+            Action action = flying.player.GetComponent<Action>();
+            action.SetNextState(action.escape);
+        }
     }
 
     public override void Do()
     {
-        if (time >= time_in_ground)
+        if (time >= time_in_ground && action.state != action.escape)
             is_complete = true;
     }
 

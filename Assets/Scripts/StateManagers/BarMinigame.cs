@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Walker : MonoBehaviour
+public class BarMinigame : MonoBehaviour
 {
-    public Chase chase;
-    public Quiet quiet;
+    public State appear, vanish, move, fail, success, reposition;
     public State state { get; private set; }
 
-    public Rigidbody2D rb;
-    public Animator upper_animator, lower_animator;
-    public SpriteRenderer upper_renderer, lower_renderer;
-    public Direction direction;
-    public Transform target;
+    public Escape escape;
+    public SpriteRenderer bar, cursor, area;
+    public FadeInOut fade, cursor_and_area_fade;
+    public int attemps;
 
     void Start()
     {
-        chase.Setup(this);
-        quiet.Setup(this);
+        appear.Setup(this);
+        vanish.Setup(this);
+        move.Setup(this);
+        fail.Setup(this);
+        success.Setup(this);
+        reposition.Setup(this);
 
-        state = quiet;
+        state = appear;
         state.Enter();
     }
 
@@ -29,9 +31,6 @@ public class Walker : MonoBehaviour
             GetNextState();
 
         state.Do();
-
-        if (state != chase && (state != quiet || quiet.state != quiet.walk))
-            rb.velocity = Vector2.zero;
     }
 
     void GetNextState()

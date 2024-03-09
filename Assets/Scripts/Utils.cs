@@ -19,6 +19,7 @@ public class Utils : MonoBehaviour
     public Color[] palette;
     public static Utils Instance { get; private set; }
 
+    public Material default_material, white_material;
     bool cursor_visibility;
 
     private void Awake()

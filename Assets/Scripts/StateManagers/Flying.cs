@@ -24,6 +24,7 @@ public class Flying : MonoBehaviour
     public FadeInOut fade;
     public Health health;
     public Rigidbody2D rb;
+    public Transform player;
 
     void Start()
     {

@@ -44,7 +44,7 @@ public class FlyAttack : State
             is_complete = true;
 
         if (time >= time_to_vulnerable)
-            flying.fly.invincible = false;
+            flying.health.invincible = false;
     }
 
     public override State Next()

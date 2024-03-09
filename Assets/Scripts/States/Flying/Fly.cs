@@ -11,8 +11,8 @@ public class Fly : State
 
     public Transform visuals;
     public float speed, y_velocity, gravity;
-    public float max_height, height_no_shadow, time_to_fade, fade_duration;
-    public bool faded, invincible;
+    public float max_height, height_no_shadow, high_height_alpha, time_to_fade, fade_duration;
+    public bool faded;
 
     Vector2 target_position;
 
@@ -29,7 +29,7 @@ public class Fly : State
 
         is_complete = false;
         faded = false;
-        invincible = false;
+        flying.health.invincible = false;
 
         target_position = new Vector2(Random.Range(-10, 10), Random.Range(-5, 5));
         flying.rb.velocity = speed * (Vector3)(target_position - (Vector2)transform.position).normalized;
@@ -63,13 +63,13 @@ public class Fly : State
 
             flying.fade.enabled = true;
             flying.fade.start_alpha = 1;
-            flying.fade.end_alpha = 0.1f;
+            flying.fade.end_alpha = high_height_alpha;
             flying.fade.time = fade_duration;
             flying.fade.Restart();
         }
-        if (faded && !invincible && time >= time_to_fade + fade_duration)
+        if (faded && !flying.health.invincible && time >= time_to_fade + fade_duration * 0.5f)
         {
-            invincible = true;
+            flying.health.invincible = true;
         }
     }
 

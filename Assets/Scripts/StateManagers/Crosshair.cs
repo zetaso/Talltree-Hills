@@ -13,7 +13,6 @@ public class Crosshair : MonoBehaviour
 
     public float accuracy; //  0: full open crosshair
                            //  1: full closed crosshair
-    public Vector2 mouse { get; private set; }
 
     void Start()
     {
@@ -28,8 +27,6 @@ public class Crosshair : MonoBehaviour
 
     void Update()
     {
-        ReadInput();
-
         if (state.is_complete)
             GetNextState();
 
@@ -76,13 +73,5 @@ public class Crosshair : MonoBehaviour
         up.GetComponent<SpriteRenderer>().color = new_color;
         left.GetComponent<SpriteRenderer>().color = new_color;
         down.GetComponent<SpriteRenderer>().color = new_color;
-    }
-
-    void ReadInput()
-    {
-        //Vector3 world_pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //mouse = new Vector2(world_pos.x, world_pos.y - world_pos.z);
-        mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = (Vector3)mouse;
     }
 }

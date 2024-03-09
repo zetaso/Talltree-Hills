@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class FadeInOut : MonoBehaviour
 {
-    [SerializeField] SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
 
     public float start_alpha, end_alpha, time, pow;
+    public bool unescaled;
     public float current_alpha { get; private set; }
 
     float lerp_value = 0;
@@ -19,7 +20,7 @@ public class FadeInOut : MonoBehaviour
 
     void Update()
     {
-        lerp_value = Mathf.Min(1, lerp_value + Time.deltaTime / time);
+        lerp_value = Mathf.Min(1, lerp_value + (unescaled ? Time.deltaTime : Time.unscaledDeltaTime) / time);
         current_alpha = Mathf.Lerp(start_alpha, end_alpha, lerp_value);
         SetAlpha(Mathf.Pow(current_alpha, pow));
 
@@ -27,7 +28,7 @@ public class FadeInOut : MonoBehaviour
             enabled = false;
     }
 
-    void SetAlpha(float value)
+    public virtual void SetAlpha(float value)
     {
         Color color = spriteRenderer.color;
         color.a = value;

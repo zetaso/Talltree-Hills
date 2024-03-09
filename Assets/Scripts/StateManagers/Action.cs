@@ -6,10 +6,11 @@ using UnityEngine;
 public class Action : MonoBehaviour
 {
     public Transform sphere;
-    public State hold, aim, reload;
+    public State hold, aim, reload, escape;
     public Shoot shoot;
     public State state { get; private set; }
 
+    public Movement movement;
     public Animator animator;
     public Direction direction;
 
@@ -27,6 +28,7 @@ public class Action : MonoBehaviour
         aim.Setup(this);
         shoot.Setup(this);
         reload.Setup(this);
+        escape.Setup(this);
 
         state = hold;
         state.Enter();

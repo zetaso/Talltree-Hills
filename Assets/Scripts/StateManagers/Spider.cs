@@ -40,6 +40,9 @@ public class Spider : MonoBehaviour
             GetNextState();
 
         state.Do();
+
+        if (state != chase && (state != passive || passive.state != passive.walk))
+            rb.velocity = Vector2.zero;
     }
 
     void GetNextState()

@@ -44,6 +44,18 @@ public class QuietWalk : State
     {
         if (Vector2.Distance(quiet.walker.transform.position, positions[position_index].position) <= 0.1f)
             is_complete = true;
+
+        string name = quiet.walker.lower_renderer.sprite.name;
+        string number = name.Substring(name.Length - 2, 2);
+        if (number[0] == '_')
+            number = number[1].ToString();
+        int index = int.Parse(number);
+        if (index % 2 == 1)
+            quiet.walker.upper_renderer.transform.localPosition = Vector3.zero;
+        else if (index % 4 == 0)
+            quiet.walker.upper_renderer.transform.localPosition = Vector3.up * 0.125f;
+        else
+            quiet.walker.upper_renderer.transform.localPosition = Vector3.down * 0.125f;
     }
 
     public override State Next()
@@ -55,6 +67,7 @@ public class QuietWalk : State
     {
         is_complete = false;
         quiet.walker.rb.velocity = Vector2.zero;
+        quiet.walker.upper_renderer.transform.localPosition = Vector3.zero;
     }
 
     public override void Setup(MonoBehaviour provider)

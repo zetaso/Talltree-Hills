@@ -8,7 +8,6 @@ public class FlyAnticipate : State
     public string clip_name;
     public float clip_duration;
 
-    public Transform player;
     public GameObject target_indicator_prefab;
     public GameObject target_indicator;
     public float forward_distance, random_radius;
@@ -27,10 +26,10 @@ public class FlyAnticipate : State
             Destroy(target_indicator);
 
         Vector2 target_postion;
-        if (player.GetComponent<Rigidbody2D>().velocity != Vector2.zero)
-            target_postion = (Vector2)player.position + player.GetComponent<Rigidbody2D>().velocity.normalized * forward_distance + Random.insideUnitCircle * random_radius;
+        if (flying.player.GetComponent<Rigidbody2D>().velocity != Vector2.zero)
+            target_postion = (Vector2)flying.player.position + flying.player.GetComponent<Rigidbody2D>().velocity.normalized * forward_distance + Random.insideUnitCircle * random_radius;
         else
-            target_postion = (Vector2)player.position;
+            target_postion = (Vector2)flying.player.position;
 
         target_indicator = Instantiate(target_indicator_prefab, target_postion, Quaternion.identity);
 
