@@ -24,7 +24,7 @@ public class Health : MonoBehaviour
     {
         if (time_flashing > 0)
         {
-            time_flashing -= Time.deltaTime;
+            time_flashing -= Time.unscaledDeltaTime;
             if (time_flashing <= 0)
                 SetFlashing(false);
         }
@@ -39,7 +39,12 @@ public class Health : MonoBehaviour
         SetFlashing(true);
 
         if (health == 0)
-            onDie.Invoke();
+        {
+            if (onDie != null)
+                onDie.Invoke();
+            else
+                Destroy(gameObject);
+        }
     }
 
     public void SetFlashing(bool flashing)

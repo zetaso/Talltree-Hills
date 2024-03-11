@@ -14,6 +14,7 @@ public class Idle : State
         is_complete = true;
 
         movement.rb.velocity = Vector2.zero;
+        movement.action.animator.transform.localPosition = Vector3.zero;
     }
 
     public override State Next()

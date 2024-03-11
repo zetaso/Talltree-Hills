@@ -19,10 +19,14 @@ public class ChaseIdle : State
         chase.walker.lower_animator.Play(lower_clip_name);
 
         chase.time_since_idle = 0;
+
+        chase.walker.upper_renderer.transform.localPosition = Vector3.zero;
+        chase.walker.rb.velocity = Vector2.zero;
     }
 
     public override void Do()
     {
+        chase.walker.rb.velocity = Vector2.zero;
     }
 
     public override State Next()

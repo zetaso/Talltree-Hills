@@ -35,17 +35,16 @@ public class ChaseRun : State
     public override void Do()
     {
         if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.vision_range)
-        {
             target_last_position = chase.walker.target.position;
-            chase.walker.rb.velocity = (target_last_position - (Vector2)chase.walker.transform.position).normalized * speed;
 
-            float angle = Vector3.SignedAngle(Vector3.right, Vector2.Scale(chase.walker.rb.velocity, new Vector2(1, 2)), Vector3.forward);
-            if (angle < 0)
-                angle += 360f;
-            else if (angle > 360f)
-                angle -= 360f;
-            chase.walker.direction.SetDirection(angle / 360f);
-        }
+        chase.walker.rb.velocity = (target_last_position - (Vector2)chase.walker.transform.position).normalized * speed;
+
+        float angle = Vector3.SignedAngle(Vector3.right, Vector2.Scale(chase.walker.rb.velocity, new Vector2(1, 2)), Vector3.forward);
+        if (angle < 0)
+            angle += 360f;
+        else if (angle > 360f)
+            angle -= 360f;
+        chase.walker.direction.SetDirection(angle / 360f);
 
         string name = chase.walker.lower_renderer.sprite.name;
         string number = name.Substring(name.Length - 2, 2);
@@ -62,8 +61,8 @@ public class ChaseRun : State
 
     public override State Next()
     {
-        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.grab.grab_range)
-            return chase.grab;
+        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.catch_.catch_range)
+            return chase.catch_;
         else if (Vector2.Distance(chase.walker.transform.position, target_last_position) < 0.1f)
             return chase.idle;
         return null;
@@ -72,8 +71,6 @@ public class ChaseRun : State
     public override void Exit()
     {
         is_complete = false;
-        chase.walker.rb.velocity = Vector2.zero;
-        chase.walker.upper_renderer.transform.localPosition = Vector3.zero;
     }
 
     public override void Setup(MonoBehaviour provider)

@@ -21,6 +21,7 @@ public class SpiderMeleeAttack : State
 
     public override void Do()
     {
+        melee.spider.rb.velocity = Vector2.zero;
         if (time >= attack_duration)
             melee.spider.SetNextState(melee.spider.chase);
     }

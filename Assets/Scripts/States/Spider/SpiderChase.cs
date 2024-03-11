@@ -6,8 +6,8 @@ public class SpiderChase : State
 {
     Spider spider;
 
-    public string clip_name;
-    public float min_chase_timeout, max_chase_timeout, speed;
+    public string clip_name, idle_clip_name;
+    public float min_chase_timeout, max_chase_timeout, speed, min_distance, max_distance, desaccel;
     float chase_timeout;
 
     public override void Trigger() { }
@@ -24,7 +24,24 @@ public class SpiderChase : State
 
     public override void Do()
     {
-        spider.rb.velocity = Utils.Warp((spider.target.position - spider.transform.position).normalized) * speed;
+        if (Vector2.Distance(spider.target.position, spider.transform.position) > max_distance)
+        {
+            spider.animator.Play(clip_name);
+            spider.animator.speed = 1;
+            spider.rb.velocity = Utils.Warp((spider.target.position - spider.transform.position).normalized) * speed;
+        }
+        else if (Vector2.Distance(spider.target.position, spider.transform.position) < min_distance)
+        {
+            spider.animator.Play(clip_name);
+            spider.animator.speed = 1;
+            spider.rb.velocity = Utils.Warp((spider.transform.position - spider.target.position).normalized) * speed;
+        }
+        else
+        {
+            spider.animator.Play(idle_clip_name, 0, 0);
+            spider.animator.speed = 0;
+            spider.rb.velocity = Vector2.zero;
+        }
 
         float angle = Vector3.SignedAngle(Vector3.right, Vector2.Scale(spider.rb.velocity, new Vector2(1, 2)), Vector3.forward);
         if (angle < 0)
@@ -36,9 +53,7 @@ public class SpiderChase : State
 
     public override State Next()
     {
-        if (Vector2.Scale(spider.target.position - spider.transform.position, new Vector2(1, 2)).magnitude <= spider.melee.attack_range)
-            return spider.melee;
-        else if (time >= chase_timeout)
+        if (time >= chase_timeout)
             return spider.range;
         return null;
     }

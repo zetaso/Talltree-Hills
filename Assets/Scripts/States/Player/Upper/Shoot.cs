@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,21 +84,21 @@ public class Shoot : State
     void Check()
     {
         float radius = (1 - crosshair.accuracy) * (crosshair.max_pixels - crosshair.min_pixels) / 8f;
-        Vector2 hit_point = (Vector2)crosshair.transform.position + Random.insideUnitCircle * radius;
+        Vector2 hit_point = (Vector2)crosshair.transform.position + UnityEngine.Random.insideUnitCircle * radius;
 
         Collider2D[] colliders = Physics2D.OverlapPointAll(hit_point);
 
-        List<Health> healths = new List<Health>();
+        List<Tuple<Health, int>> healths = new List<Tuple<Health, int>>();
 
         foreach (var item in colliders)
         {
             Health health = item.transform.root.GetComponent<Health>();
-            if (health)
-                healths.Add(health);
+            if (health && item.isTrigger)
+                healths.Add(new Tuple<Health, int>(health, int.Parse(item.transform.name)));
         }
 
         SpriteRenderer bullet_sprite = Instantiate(bullet_hit, hit_point, Quaternion.identity).GetComponent<SpriteRenderer>();
-        Destroy(bullet_sprite, bullet_hit_lifetime * 2f);
+        Destroy(bullet_sprite.gameObject, bullet_hit_lifetime * 2f);
         FadeInOut bullet_fade = bullet_sprite.GetComponent<FadeInOut>();
         bullet_fade.start_alpha = 1;
         bullet_fade.end_alpha = 0;
@@ -111,17 +112,20 @@ public class Shoot : State
                 int in_front = 0;
                 for (int i = 1; i < healths.Count; i++)
                 {
-                    if (healths[i].GetComponent<Sorting>().order > healths[in_front].GetComponent<Sorting>().order)
+                    if (healths[i].Item1.GetComponent<Sorting>().order > healths[in_front].Item1.GetComponent<Sorting>().order)
                         in_front = i;
                 }
-                healths[in_front].TakeDamage(1);
+                healths[in_front].Item1.TakeDamage(1);
             }
             else
             {
-                healths[0].TakeDamage(1);
+                healths[0].Item1.TakeDamage(healths[0].Item2);
             }
 
-            bullet_sprite.color = Utils.Instance.palette[(int)ColorTag.WHITE];
+            if (healths[0].Item1.invincible)
+                bullet_sprite.color = Utils.Instance.palette[(int)ColorTag.LILA];
+            else
+                bullet_sprite.color = Utils.Instance.palette[(int)ColorTag.WHITE];
         }
         else
         {

@@ -48,7 +48,7 @@ public class Walk : State
 
     public override State Next()
     {
-        if (movement.input == Vector2.zero)
+        if (movement.input == Vector2.zero || movement.action.state == movement.action.fight_spider || movement.action.state == movement.action.escape)
             return movement.idle;
         else if (Input.GetKeyDown(KeyCode.LeftShift) && stamina.stamina == 1)
             return movement.run;

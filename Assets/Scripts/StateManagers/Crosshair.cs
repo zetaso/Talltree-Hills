@@ -32,6 +32,7 @@ public class Crosshair : MonoBehaviour
 
         state.Do();
 
+        transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         SetLines(accuracy);
     }
 

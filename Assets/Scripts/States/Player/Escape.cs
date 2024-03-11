@@ -8,8 +8,8 @@ public class Escape : State
 
     public string clip_name;
 
-    public GameObject escape_minigame, prefab;
-    public Transform prefab_parent;
+    public BarMinigame bar_minigame;
+    public FlyCatch catcher;
 
     public override void Trigger() { }
 
@@ -18,13 +18,11 @@ public class Escape : State
         base.Enter();
         is_complete = false;
 
+        action.animator.updateMode = AnimatorUpdateMode.UnscaledTime;
         action.animator.Play(clip_name);
-        action.movement.GetComponent<SpriteRenderer>().enabled = false;
+        action.movement.animator.GetComponent<SpriteRenderer>().enabled = false;
 
-        escape_minigame = Instantiate(prefab, prefab_parent);
-        escape_minigame.transform.localPosition = Vector2.zero;
-        escape_minigame.transform.rotation = Quaternion.identity;
-        escape_minigame.GetComponent<BarMinigame>().escape = this;
+        bar_minigame.SetNextState(bar_minigame.appear);
 
         action.movement.rb.velocity = Vector2.zero;
         Time.timeScale = 0;
@@ -37,8 +35,9 @@ public class Escape : State
     public override void Exit()
     {
         is_complete = false;
-        action.movement.GetComponent<SpriteRenderer>().enabled = true;
+        action.movement.animator.GetComponent<SpriteRenderer>().enabled = true;
         Time.timeScale = 1;
+        action.animator.updateMode = AnimatorUpdateMode.Normal;
     }
 
     public override void Setup(MonoBehaviour provider)

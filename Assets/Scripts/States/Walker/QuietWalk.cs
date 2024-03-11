@@ -29,6 +29,12 @@ public class QuietWalk : State
             forward = false;
         else if (position_index == 0)
             forward = true;
+    }
+
+    public override void Do()
+    {
+        if (Vector2.Distance(quiet.walker.transform.position, positions[position_index].position) <= 0.1f)
+            is_complete = true;
 
         quiet.walker.rb.velocity = Utils.Warp((positions[position_index].position - quiet.walker.transform.position).normalized * speed);
 
@@ -38,12 +44,6 @@ public class QuietWalk : State
         else if (angle > 360f)
             angle -= 360f;
         quiet.walker.direction.SetDirection(angle / 360f);
-    }
-
-    public override void Do()
-    {
-        if (Vector2.Distance(quiet.walker.transform.position, positions[position_index].position) <= 0.1f)
-            is_complete = true;
 
         string name = quiet.walker.lower_renderer.sprite.name;
         string number = name.Substring(name.Length - 2, 2);
@@ -66,8 +66,6 @@ public class QuietWalk : State
     public override void Exit()
     {
         is_complete = false;
-        quiet.walker.rb.velocity = Vector2.zero;
-        quiet.walker.upper_renderer.transform.localPosition = Vector3.zero;
     }
 
     public override void Setup(MonoBehaviour provider)

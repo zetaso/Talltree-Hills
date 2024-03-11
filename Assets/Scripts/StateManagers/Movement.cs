@@ -7,6 +7,7 @@ public class Movement : MonoBehaviour
     public State idle, walk, run;
     public State state { get; private set; }
 
+    public Action action;
     public Rigidbody2D rb;
     public Collider2D col;
     public Animator animator;
@@ -51,6 +52,7 @@ public class Movement : MonoBehaviour
 
     void ReadInput()
     {
-        input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        input = (Utils.Instance.pause.paused || action.state == action.escape || action.state == action.fight_spider)
+         ? Vector2.zero : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
     }
 }

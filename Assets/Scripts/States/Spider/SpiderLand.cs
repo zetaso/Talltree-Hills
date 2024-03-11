@@ -23,6 +23,13 @@ public class SpiderLand : State
 
     public override void Do()
     {
+        float speed = spider.rb.velocity.magnitude;
+        if (speed > 0)
+        {
+            speed = Mathf.Max(0, speed - spider.range.jump.friction * Time.deltaTime);
+            spider.rb.velocity = spider.rb.velocity.normalized * speed;
+        }
+
         if (time >= time_stunned)
             is_complete = true;
     }

@@ -21,6 +21,7 @@ public class SpiderMeleeAnticipate : State
 
     public override void Do()
     {
+        melee.spider.rb.velocity = Vector2.zero;
         if (time >= anticipate_time)
             is_complete = true;
     }

@@ -7,6 +7,7 @@ public class SpiderRange : State
     public Spider spider { get; private set; }
     public SpiderRangeAnticipate anticipate;
     public SpiderRangeJump jump;
+    public SpiderRangeHug hug;
     public State state { get; private set; }
 
     public override void Trigger() { }
@@ -36,6 +37,7 @@ public class SpiderRange : State
         spider = provider as Spider;
         anticipate.Setup(this);
         jump.Setup(this);
+        hug.Setup(this);
     }
 
     void GetNextState()

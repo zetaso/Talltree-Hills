@@ -18,10 +18,14 @@ public class QuietIdle : State
 
         quiet.walker.upper_animator.Play(upper_clip_name);
         quiet.walker.lower_animator.Play(lower_clip_name);
+
+        quiet.walker.upper_renderer.transform.localPosition = Vector3.zero;
+        quiet.walker.rb.velocity = Vector2.zero;
     }
 
     public override void Do()
     {
+        quiet.walker.rb.velocity = Vector2.zero;
         if (time >= time_idle)
             is_complete = true;
     }

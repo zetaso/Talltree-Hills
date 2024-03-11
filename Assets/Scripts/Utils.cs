@@ -18,8 +18,10 @@ public class Utils : MonoBehaviour
 {
     public Color[] palette;
     public static Utils Instance { get; private set; }
+    public PauseListener pause;
 
-    public Material default_material, white_material;
+    public static float unpausedDeltaTime;
+    public Material default_material, white_material, outline_material;
     bool cursor_visibility;
 
     private void Awake()
@@ -41,6 +43,9 @@ public class Utils : MonoBehaviour
 
     void Update()
     {
+        if (pause)
+            unpausedDeltaTime = pause.paused ? 0 : Time.unscaledDeltaTime;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             cursor_visibility = !cursor_visibility;

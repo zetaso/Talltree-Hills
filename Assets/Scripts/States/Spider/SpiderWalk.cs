@@ -28,6 +28,7 @@ public class SpiderWalk : State
 
     public override void Do()
     {
+        passive.spider.rb.velocity = Utils.Warp((target_position - (Vector2)passive.spider.transform.position).normalized) * speed;
         float angle = Vector3.SignedAngle(Vector3.right, Vector2.Scale(passive.spider.rb.velocity, new Vector2(1, 2)), Vector3.forward);
         if (angle < 0)
             angle += 360f;

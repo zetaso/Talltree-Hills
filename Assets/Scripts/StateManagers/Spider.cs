@@ -17,6 +17,7 @@ public class Spider : MonoBehaviour
     public Direction direction;
     public Transform visuals;
     public Transform target;
+    public Action action;
 
     public Vector2 origin_position;
     public float vision_range;
@@ -40,9 +41,6 @@ public class Spider : MonoBehaviour
             GetNextState();
 
         state.Do();
-
-        if (state != chase && (state != passive || passive.state != passive.walk))
-            rb.velocity = Vector2.zero;
     }
 
     void GetNextState()

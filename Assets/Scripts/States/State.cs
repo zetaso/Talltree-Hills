@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
-    public bool is_complete { get; protected set; }
+    public bool is_complete;
     float start_time;
     protected float time => Time.time - start_time;
 

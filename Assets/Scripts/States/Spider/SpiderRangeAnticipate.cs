@@ -21,6 +21,7 @@ public class SpiderRangeAnticipate : State
 
     public override void Do()
     {
+        range.spider.rb.velocity = Vector2.zero;
         if (time >= anticipate_time)
             is_complete = true;
     }

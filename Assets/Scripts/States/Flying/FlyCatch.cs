@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FlyCatch : State
 {
-    protected Flying flying;
+    public Flying flying { get; private set; }
     public string clip_name;
 
     public Action action;
@@ -25,6 +25,8 @@ public class FlyCatch : State
         {
             Action action = flying.player.GetComponent<Action>();
             action.SetNextState(action.escape);
+            action.escape.catcher = this;
+            flying.transform.position = action.transform.position;
         }
     }
 

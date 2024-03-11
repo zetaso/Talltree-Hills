@@ -6,7 +6,7 @@ public class Chase : State
 {
     public ChaseIdle idle;
     public ChaseRun run;
-    public ChaseGrab grab;
+    public ChaseCatch catch_;
     public State state { get; private set; }
 
     public Walker walker { get; private set; }
@@ -52,7 +52,7 @@ public class Chase : State
 
         idle.Setup(this);
         run.Setup(this);
-        grab.Setup(this);
+        catch_.Setup(this);
     }
 
     void GetNextState()

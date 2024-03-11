@@ -20,7 +20,7 @@ public class FadeInOut : MonoBehaviour
 
     void Update()
     {
-        lerp_value = Mathf.Min(1, lerp_value + (unescaled ? Time.deltaTime : Time.unscaledDeltaTime) / time);
+        lerp_value = Mathf.Min(1, lerp_value + Utils.unpausedDeltaTime / time);
         current_alpha = Mathf.Lerp(start_alpha, end_alpha, lerp_value);
         SetAlpha(Mathf.Pow(current_alpha, pow));
 

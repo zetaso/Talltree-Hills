@@ -8,6 +8,7 @@ public class BarMinigame : MonoBehaviour
     public State state { get; private set; }
 
     public Escape escape;
+    public PauseListener pause;
     public SpriteRenderer bar, cursor, area;
     public FadeInOut fade, cursor_and_area_fade;
     public int attemps;
@@ -21,16 +22,18 @@ public class BarMinigame : MonoBehaviour
         success.Setup(this);
         reposition.Setup(this);
 
-        state = appear;
-        state.Enter();
+        state = null;
     }
 
     void Update()
     {
-        if (state.is_complete)
-            GetNextState();
+        if (state)
+        {
+            if (state.is_complete)
+                GetNextState();
 
-        state.Do();
+            state.Do();
+        }
     }
 
     void GetNextState()
@@ -48,7 +51,8 @@ public class BarMinigame : MonoBehaviour
     {
         if (new_state)
         {
-            state.Exit();
+            if (state)
+                state.Exit();
             state = new_state;
             state.Enter();
         }

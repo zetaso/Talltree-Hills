@@ -20,7 +20,10 @@ public class SpiderIdle : State
         passive.spider.animator.speed = 0;
     }
 
-    public override void Do() { }
+    public override void Do()
+    {
+        passive.spider.rb.velocity = Vector2.zero;
+    }
 
     public override State Next()
     {
