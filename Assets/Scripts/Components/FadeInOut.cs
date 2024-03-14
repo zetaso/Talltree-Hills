@@ -7,7 +7,7 @@ public class FadeInOut : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     public float start_alpha, end_alpha, time, pow;
-    public bool unescaled;
+    public bool unescaled, true_unescaled;
     public float current_alpha { get; private set; }
 
     float lerp_value = 0;
@@ -20,7 +20,7 @@ public class FadeInOut : MonoBehaviour
 
     void Update()
     {
-        lerp_value = Mathf.Min(1, lerp_value + Utils.unpausedDeltaTime / time);
+        lerp_value = Mathf.Min(1, lerp_value + (true_unescaled ? Time.unscaledDeltaTime : unescaled ? Utils.unpausedDeltaTime : Time.deltaTime) / time);
         current_alpha = Mathf.Lerp(start_alpha, end_alpha, lerp_value);
         SetAlpha(Mathf.Pow(current_alpha, pow));
 

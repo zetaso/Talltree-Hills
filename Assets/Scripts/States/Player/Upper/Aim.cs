@@ -31,11 +31,11 @@ public class Aim : State
 
     public override State Next()
     {
-        if (Input.GetMouseButton(0) && action.ammo > 0)
+        if (Input.GetMouseButton(0) && action.ammo > 0 && Utils.Instance.pause.CanInput())
             return action.shoot;
-        else if (Input.GetKey(KeyCode.R) && action.ammo < action.max_ammo)
+        else if (Input.GetKey(KeyCode.R) && action.ammo < action.max_ammo && action.ammo_left > 0 && Utils.Instance.pause.CanInput())
             return action.reload;
-        else if (!Input.GetMouseButton(1))
+        else if (!Input.GetMouseButton(1) && Utils.Instance.pause.CanInput())
             return action.hold;
         return null;
     }

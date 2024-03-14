@@ -36,7 +36,9 @@ public class QuietWalk : State
         if (Vector2.Distance(quiet.walker.transform.position, positions[position_index].position) <= 0.1f)
             is_complete = true;
 
-        quiet.walker.rb.velocity = Utils.Warp((positions[position_index].position - quiet.walker.transform.position).normalized * speed);
+        Vector2 gap = positions[position_index].position - quiet.walker.transform.position;
+        if (gap != Vector2.zero)
+            quiet.walker.rb.velocity = Utils.Warp((positions[position_index].position - quiet.walker.transform.position).normalized * speed);
 
         float angle = Vector3.SignedAngle(Vector3.right, Vector2.Scale(quiet.walker.rb.velocity, new Vector2(1, 2)), Vector3.forward);
         if (angle < 0)

@@ -10,6 +10,8 @@ public class Spider : MonoBehaviour
     public SpiderChase chase;
     public SpiderMelee melee;
     public SpiderRange range;
+    public SpiderEscape escape;
+    public SpiderDie die;
     public State state { get; private set; }
 
     public Rigidbody2D rb;
@@ -18,6 +20,8 @@ public class Spider : MonoBehaviour
     public Transform visuals;
     public Transform target;
     public Action action;
+    public Health health;
+    public Collider2D col;
 
     public Vector2 origin_position;
     public float vision_range;
@@ -30,9 +34,13 @@ public class Spider : MonoBehaviour
         chase.Setup(this);
         melee.Setup(this);
         range.Setup(this);
+        escape.Setup(this);
+        die.Setup(this);
 
         state = fall;
         state.Enter();
+
+        health.onDie += die.Trigger;
     }
 
     void Update()

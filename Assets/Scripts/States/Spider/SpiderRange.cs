@@ -10,6 +10,8 @@ public class SpiderRange : State
     public SpiderRangeHug hug;
     public State state { get; private set; }
 
+    public bool did_catch;
+
     public override void Trigger() { }
 
     public override void Enter()
@@ -18,6 +20,8 @@ public class SpiderRange : State
 
         state = anticipate;
         state.Enter();
+
+        did_catch = false;
     }
 
     public override void Do()

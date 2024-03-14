@@ -10,10 +10,12 @@ public class Health : MonoBehaviour
     public int health { get; private set; }
     public bool invincible;
 
-    public UnityAction onDie;
+    public UnityAction onDie, onDamage;
 
     public float flash_time;
     float time_flashing;
+
+    Material last_material;
 
     void Start()
     {
@@ -36,14 +38,21 @@ public class Health : MonoBehaviour
             return;
 
         health = Mathf.Max(0, health - damage);
-        SetFlashing(true);
 
         if (health == 0)
         {
             if (onDie != null)
                 onDie.Invoke();
             else
+            {
                 Destroy(gameObject);
+            }
+        }
+        else
+        {
+            if (onDamage != null)
+                onDamage.Invoke();
+            SetFlashing(true);
         }
     }
 
@@ -52,11 +61,13 @@ public class Health : MonoBehaviour
         if (!flashing)
         {
             foreach (var item in spriteRenderers)
-                item.material = Utils.Instance.default_material;
+                item.material = last_material;
         }
         else
         {
             time_flashing = flash_time;
+            if (spriteRenderers.Length >= 0)
+                last_material = spriteRenderers[0].material;
             foreach (var item in spriteRenderers)
                 item.material = Utils.Instance.white_material;
         }

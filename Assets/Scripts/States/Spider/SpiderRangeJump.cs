@@ -23,6 +23,8 @@ public class SpiderRangeJump : State
         range.spider.animator.Play(clip_name);
 
         jump_direction = range.spider.target.position - range.spider.transform.position;
+        if (jump_direction.magnitude > 8)
+            jump_direction = jump_direction.normalized * 8f;
 
         origin_point = range.spider.transform.position;
         float dist_between = Vector2.Distance(range.spider.target.position, range.spider.transform.position);
@@ -77,7 +79,10 @@ public class SpiderRangeJump : State
         return null;
     }
 
-    public override void Exit() { is_complete = false; }
+    public override void Exit()
+    {
+        is_complete = false;
+    }
 
     public override void Setup(MonoBehaviour provider)
     {

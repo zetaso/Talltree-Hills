@@ -4,23 +4,25 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogBox : MonoBehaviour
 {
     public TMP_Text text;
-    public DialogTrigger provider;
+    public Image talker_image;
+    public InteractionTrigger provider;
     public float characters_per_second, delay_character;
-    public GameObject box;
+    public GameObject box, hint;
 
     int current_message = 0, current_character;
     float time_to_next;
-    bool writing, waiting_continue, pressing;
+    bool writing, waiting_continue;
 
     void Update()
     {
         if (writing)
         {
-            if (current_message == provider.messages.Count)
+            if (current_message == provider.origin_messages.Count)
             {
                 EndDialog();
             }
@@ -28,21 +30,21 @@ public class DialogBox : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F) || Input.GetMouseButtonDown(0))
                 {
-                    text.text = provider.messages[current_message].Replace("_", "");
-                    current_character = provider.messages[current_message].Length;
+                    text.text = provider.origin_messages[current_message].message.Replace("_", "");
+                    current_character = provider.origin_messages[current_message].message.Length;
                 }
 
-                time_to_next -= Utils.unpausedDeltaTime;
-                if (current_character == provider.messages[current_message].Length)
+                time_to_next -= Utils.dialogDeltaTime;
+                if (current_character == provider.origin_messages[current_message].message.Length)
                 {
                     current_message++;
                     current_character = 0;
                     writing = false;
                     waiting_continue = true;
                 }
-                if (time_to_next <= 0)
+                else if (time_to_next <= 0)
                 {
-                    char new_character = provider.messages[current_message][current_character];
+                    char new_character = provider.origin_messages[current_message].message[current_character];
                     current_character++;
                     if (new_character != '_')
                     {
@@ -60,30 +62,46 @@ public class DialogBox : MonoBehaviour
             {
                 writing = true;
                 waiting_continue = false;
-                time_to_next = 0.125f;
+                if (provider.origin_messages.Count > 0 && current_message < provider.origin_messages.Count)
+                    talker_image.sprite = Utils.Instance.talker_profiles[(int)provider.origin_messages[current_message].talker];
+                time_to_next = 0;
                 text.text = "";
-                pressing = true;
             }
         }
     }
 
-    public void EnterDialog(DialogTrigger dialog_trigger)
+    public void EnterDialog(InteractionTrigger dialog_trigger)
     {
         provider = dialog_trigger;
-        writing = true;
-        waiting_continue = false;
-        box.SetActive(true);
-        Time.timeScale = 0;
-        time_to_next = 0.5f;
-        current_message = 0;
-        current_character = 0;
-        text.text = "";
+        if (dialog_trigger.origin_messages.Count > 0)
+        {
+            writing = true;
+            waiting_continue = false;
+            box.SetActive(true);
+            hint.SetActive(false);
+            Time.timeScale = 0;
+            time_to_next = 0;
+            current_message = 0;
+            current_character = 0;
+            text.text = "";
+            Utils.Instance.pause.dialog = true;
+            if (provider.origin_messages.Count > 0 && current_message < provider.origin_messages.Count)
+                talker_image.sprite = Utils.Instance.talker_profiles[(int)provider.origin_messages[current_message].talker];
+        }
+        provider.OnInteracting();
     }
 
     void EndDialog()
     {
-        writing = false;
-        box.SetActive(false);
-        Time.timeScale = 1;
+        if (provider.origin_messages.Count > 0)
+        {
+            writing = false;
+            box.SetActive(false);
+            hint.SetActive(true);
+            Time.timeScale = 1;
+            Utils.Instance.pause.dialog = false;
+        }
+        provider.OnEndInteracting();
+        provider = null;
     }
 }

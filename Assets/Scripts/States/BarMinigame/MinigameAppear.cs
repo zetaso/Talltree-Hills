@@ -20,6 +20,12 @@ public class MinigameAppear : State
 
         minigame.attemps = 0;
         appearing = false;
+
+        float difference = minigame.transform.position.y - Camera.main.transform.position.y;
+        if (difference < -5.125f)
+            minigame.transform.position += Vector3.up * (-5.125f - difference);
+
+        Utils.Instance.player_health.SetDamaging(true);
     }
 
     public override void Do()

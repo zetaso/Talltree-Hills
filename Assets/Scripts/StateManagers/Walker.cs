@@ -6,6 +6,7 @@ public class Walker : MonoBehaviour
 {
     public Chase chase;
     public Quiet quiet;
+    public WalkerDie die;
     public State state { get; private set; }
 
     public Rigidbody2D rb;
@@ -13,14 +14,19 @@ public class Walker : MonoBehaviour
     public SpriteRenderer upper_renderer, lower_renderer;
     public Direction direction;
     public Transform target;
+    public Action action;
+    public Health health;
 
     void Start()
     {
         chase.Setup(this);
         quiet.Setup(this);
+        die.Setup(this);
 
         state = quiet;
         state.Enter();
+
+        health.onDie += die.Trigger;
     }
 
     void Update()

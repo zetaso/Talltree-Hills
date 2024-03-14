@@ -1,17 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FlyAggro : State
 {
     protected Flying flying;
+    public UnityEvent onAggro;
 
-    public override void Trigger() { }
+    public override void Trigger()
+    {
+        flying.SetNextState(ref flying.mode, this);
+    }
 
     public override void Enter()
     {
         base.Enter();
         flying.fly_anticipate.Trigger();
+        if (onAggro != null)
+        {
+            onAggro.Invoke();
+            onAggro.RemoveAllListeners();
+            onAggro = null;
+        }
     }
 
     public override void Do() { }

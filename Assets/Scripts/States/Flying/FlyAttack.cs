@@ -16,6 +16,7 @@ public class FlyAttack : State
         base.Enter();
 
         flying.animator.Play(clip_name);
+        flying.did_catch = true;
 
         if (flying.fly_anticipate.target_indicator != null)
         {

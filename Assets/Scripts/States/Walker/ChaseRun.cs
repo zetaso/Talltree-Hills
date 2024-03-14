@@ -8,6 +8,7 @@ public class ChaseRun : State
 
     public string upper_clip_name, lower_clip_name;
     public float speed;
+    public bool follow_forever;
 
     Vector2 target_last_position;
 
@@ -34,7 +35,7 @@ public class ChaseRun : State
 
     public override void Do()
     {
-        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.vision_range)
+        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.vision_range || follow_forever)
             target_last_position = chase.walker.target.position;
 
         chase.walker.rb.velocity = (target_last_position - (Vector2)chase.walker.transform.position).normalized * speed;
@@ -61,7 +62,7 @@ public class ChaseRun : State
 
     public override State Next()
     {
-        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.catch_.catch_range)
+        if (Vector2.Scale(chase.walker.target.position - transform.position, new Vector2(1, 2)).magnitude <= chase.catch_.catch_range && chase.walker.action.state != chase.walker.action.still)
             return chase.catch_;
         else if (Vector2.Distance(chase.walker.transform.position, target_last_position) < 0.1f)
             return chase.idle;

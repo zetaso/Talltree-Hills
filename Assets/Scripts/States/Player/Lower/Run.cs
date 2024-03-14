@@ -14,7 +14,7 @@ public class Run : Walk
         movement.animator.speed = animation_speed;
         stamina.sprint.Trigger();
 
-        if (action.state != action.reload)
+        if (action.state != action.reload && action.state != action.no_weapon)
             action.hold.Trigger();
 
         crosshair.inactive.Trigger();

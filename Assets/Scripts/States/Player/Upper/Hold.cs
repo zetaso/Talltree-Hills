@@ -21,11 +21,11 @@ public class Hold : State
 
     public override State Next()
     {
-        if (Input.GetKey(KeyCode.R) && action.ammo < action.max_ammo)
+        if (Input.GetKey(KeyCode.R) && action.ammo < action.max_ammo && action.ammo_left > 0 && Utils.Instance.pause.CanInput())
             return action.reload;
         else if (movement.state == movement.run)
             return null;
-        else if (Input.GetMouseButton(1))
+        else if (Input.GetMouseButton(1) && Utils.Instance.pause.CanInput())
             return action.aim;
         else
             return null;

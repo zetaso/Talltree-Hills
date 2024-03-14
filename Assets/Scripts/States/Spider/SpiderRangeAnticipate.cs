@@ -28,7 +28,9 @@ public class SpiderRangeAnticipate : State
 
     public override State Next()
     {
-        return range.jump;
+        if (range.spider.state == range.spider.range)
+            return range.jump;
+        return null;
     }
 
     public override void Exit() { is_complete = false; }

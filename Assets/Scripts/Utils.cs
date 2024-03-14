@@ -16,13 +16,22 @@ public enum ColorTag
 
 public class Utils : MonoBehaviour
 {
+    public string[] scene_names;
+    public int last_gate_crossed;
+
+    public Sprite[] talker_profiles;
     public Color[] palette;
     public static Utils Instance { get; private set; }
     public PauseListener pause;
+    public SceneDataManager scene_data_manager;
+    public Interact interact;
+
+    public PlayerHealth player_health;
 
     public static float unpausedDeltaTime;
+    public static float dialogDeltaTime;
+    public static float minigameDeltaTime;
     public Material default_material, white_material, outline_material;
-    bool cursor_visibility;
 
     private void Awake()
     {
@@ -33,29 +42,38 @@ public class Utils : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
-
 
     void Start()
     {
-        Cursor.visible = cursor_visibility;
+        Cursor.visible = false;
     }
 
     void Update()
     {
         if (pause)
-            unpausedDeltaTime = pause.paused ? 0 : Time.unscaledDeltaTime;
-
-        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            cursor_visibility = !cursor_visibility;
-            Cursor.visible = cursor_visibility;
+            dialogDeltaTime = (pause.paused || pause.dead) ? 0 : Time.unscaledDeltaTime;
+            unpausedDeltaTime = (pause.paused || pause.dialog) ? 0 : Time.unscaledDeltaTime;
+            minigameDeltaTime = pause.paused ? 0 : Time.unscaledDeltaTime;
         }
     }
+
+    public static void SetCursorVisibility(bool visibility)
+    {
+        Cursor.visible = visibility;
+    }
+
     public static IEnumerator Delay(float time, UnityAction action)
     {
         yield return new WaitForSeconds(time);
         action.Invoke();
+    }
+
+    public static float easeInOutSine(float x)
+    {
+        return -(Mathf.Cos(Mathf.PI * x) - 1) / 2;
     }
 
     public static float EaseInSine(float x)

@@ -9,6 +9,8 @@ public class SpiderLand : State
     public string clip_name;
     public float time_stunned;
 
+    bool first_land;
+
     public override void Trigger() { }
 
     public override void Enter()
@@ -36,7 +38,17 @@ public class SpiderLand : State
 
     public override State Next()
     {
-        return spider.passive;
+        if (first_land)
+        {
+            first_land = false;
+            return spider.passive;
+
+        }
+        else if (spider.range.did_catch)
+        {
+            return spider.escape;
+        }
+        return spider.chase;
     }
 
     public override void Exit() { is_complete = false; }

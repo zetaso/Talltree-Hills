@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FightSpider : State
 {
-    Action action;
+    public Action action;
     public string clip_name;
     public KeysMinigame minigame;
 

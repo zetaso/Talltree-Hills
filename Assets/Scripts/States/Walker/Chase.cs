@@ -13,7 +13,10 @@ public class Chase : State
 
     public float vision_range, idle_timeout, time_since_idle;
 
-    public override void Trigger() { }
+    public override void Trigger()
+    {
+        walker.SetNextState(this);
+    }
 
     public override void Enter()
     {

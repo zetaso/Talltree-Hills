@@ -10,11 +10,13 @@ public class MainMenu : MonoBehaviour
     public void OnPlay()
     {
         SceneManager.LoadScene(game_scene);
+        Cursor.visible = false;
     }
 
     public void OnMainMenu()
     {
         SceneManager.LoadScene(menu_scene);
+        Cursor.visible = true;
     }
 
     public void OnExit()

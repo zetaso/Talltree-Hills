@@ -9,8 +9,8 @@ public class Movement : MonoBehaviour
 
     public Action action;
     public Rigidbody2D rb;
-    public Collider2D col;
     public Animator animator;
+    public SpriteRenderer ren;
     public Direction direction;
     public StaminaUI staminaUI;
 
@@ -52,7 +52,15 @@ public class Movement : MonoBehaviour
 
     void ReadInput()
     {
-        input = (Utils.Instance.pause.paused || action.state == action.escape || action.state == action.fight_spider)
+        input = (!Utils.Instance.pause.CanInput() ||
+        action.state == action.escape ||
+        action.state == action.fight_spider ||
+        action.state == action.still)
          ? Vector2.zero : new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+    }
+
+    public void SetDirection(float angle)
+    {
+        direction.SetDirection(angle / 360f);
     }
 }

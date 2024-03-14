@@ -26,6 +26,8 @@ public class Flying : MonoBehaviour
     public Rigidbody2D rb;
     public Transform player;
 
+    public bool did_catch;
+
     void Start()
     {
         fly_safe.Setup(this);
@@ -45,6 +47,7 @@ public class Flying : MonoBehaviour
         state.Enter();
 
         health.onDie += fly_fall.Trigger;
+        //health.onDamage += fly_aggro.Trigger;
     }
 
     void Update()

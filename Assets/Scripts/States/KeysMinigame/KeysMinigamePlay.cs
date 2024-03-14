@@ -19,42 +19,53 @@ public class KeysMinigamePlay : State
         is_complete = false;
 
         value = initial_value;
+
+        Utils.Instance.player_health.SetDamaging(true);
     }
 
     public override void Do()
     {
         value = Mathf.Max(0, value - decrease_rate * Time.deltaTime);
 
-        bool a_pressed = Input.GetKeyDown(KeyCode.A);
-        bool d_pressed = Input.GetKeyDown(KeyCode.D);
-
-        if (a_pressed && (left_key || first_key))
+        if (value == 0)
         {
-            if (first_key)
-            {
-                first_key = false;
-                left_key = true;
-            }
-            left_key = !left_key;
-            value += value_per_key;
-        }
-        else if (d_pressed && (!left_key || first_key))
-        {
-            if (first_key)
-            {
-                first_key = false;
-                left_key = false;
-            }
-            left_key = !left_key;
-            value += value_per_key;
-        }
-
-        if (value >= 1)
             is_complete = true;
+        }
+        else
+        {
+            bool a_pressed = Input.GetKeyDown(KeyCode.A);
+            bool d_pressed = Input.GetKeyDown(KeyCode.D);
+
+            if (a_pressed && (left_key || first_key))
+            {
+                if (first_key)
+                {
+                    first_key = false;
+                    left_key = true;
+                }
+                left_key = !left_key;
+                value += value_per_key;
+            }
+            else if (d_pressed && (!left_key || first_key))
+            {
+                if (first_key)
+                {
+                    first_key = false;
+                    left_key = false;
+                }
+                left_key = !left_key;
+                value += value_per_key;
+            }
+
+            if (value >= 1)
+                is_complete = true;
+        }
     }
 
     public override State Next()
     {
+        if (value == 0)
+            return minigame.die;
         return minigame.vanish;
     }
 

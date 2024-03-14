@@ -22,7 +22,7 @@ public class Sorting : MonoBehaviour
 
     void Refresh()
     {
-        order = (int)(-transform.position.y * 8f);
+        order = (int)(-transform.position.y * 16f);
         foreach (var item in spriteRenderers)
         {
             item.sortingOrder = order;

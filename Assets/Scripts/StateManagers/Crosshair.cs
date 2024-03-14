@@ -8,11 +8,18 @@ public class Crosshair : MonoBehaviour
     public Inactive inactive;
     public State state { get; private set; }
 
+    public Action action;
     public Transform right, up, left, down;
     public float max_pixels, min_pixels;
 
-    public float accuracy; //  0: full open crosshair
-                           //  1: full closed crosshair
+    public float min_dist, max_dist;                    // accuracy curve x limits
+    public float min_dist_accuracy, max_dist_accuracy;  // accuracy curve y limits
+    public float max_base_accuracy;
+
+    public float accuracy;  //  0: full open crosshair
+                            //  1: full closed crosshair
+
+    public float min_accuracy;
 
     void Start()
     {
@@ -33,7 +40,21 @@ public class Crosshair : MonoBehaviour
         state.Do();
 
         transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        SetLines(accuracy);
+
+        float base_accuracy;
+        float distance = Vector2.Distance(transform.position, action.transform.position);
+        if (distance <= min_dist)
+            base_accuracy = 0;
+        else if (distance >= max_dist)
+            base_accuracy = max_base_accuracy;
+        else
+        {
+            float local_x = (distance - min_dist) / (max_dist - min_dist);
+            float local_y = Utils.EaseInSine(local_x);
+            base_accuracy = local_y * max_base_accuracy;
+        }
+
+        SetLines(base_accuracy + accuracy);
     }
 
     void GetNextState()

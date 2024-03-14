@@ -42,6 +42,7 @@ public class FlyDead : State
         }
         else if (time >= time_in_ground + fade_duration)
         {
+            flying.fly.target.parent = flying.transform;
             Destroy(flying.gameObject);
         }
     }

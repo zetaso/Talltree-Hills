@@ -32,7 +32,9 @@ public class QuietIdle : State
 
     public override State Next()
     {
-        return quiet.walk;
+        if (quiet.walk.positions != null && quiet.walk.positions.Length > 0)
+            return quiet.walk;
+        return null;
     }
 
     public override void Exit() { is_complete = false; }

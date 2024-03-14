@@ -26,6 +26,8 @@ public class MinigameVanish : State
         minigame.cursor_and_area_fade.start_alpha = 1;
         minigame.cursor_and_area_fade.end_alpha = 0;
         minigame.cursor_and_area_fade.Restart();
+
+        Utils.Instance.player_health.SetDamaging(false);
     }
 
     public override void Do()
@@ -34,6 +36,8 @@ public class MinigameVanish : State
 
         if (utime_passed >= vanish_time)
             is_complete = true;
+
+        minigame.transform.localPosition = Vector3.down;
     }
 
     public override State Next()

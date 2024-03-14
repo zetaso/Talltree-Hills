@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Fly : State
 {
@@ -11,10 +12,11 @@ public class Fly : State
 
     public Transform visuals;
     public float speed, y_velocity, gravity;
-    public float max_height, height_no_shadow, high_height_alpha, time_to_fade, fade_duration;
-    public bool faded;
+    public float max_height, height_no_shadow;
 
-    Vector2 target_position;
+    public Transform target;
+    public bool manual_position;
+    public EventSequence onReachTarget;
 
     public override void Trigger() { }
 
@@ -28,11 +30,22 @@ public class Fly : State
         flying.fly_safe.Trigger();
 
         is_complete = false;
-        faded = false;
-        flying.health.invincible = false;
 
-        target_position = new Vector2(Random.Range(-10, 10), Random.Range(-5, 5));
-        flying.rb.velocity = speed * (Vector3)(target_position - (Vector2)transform.position).normalized;
+        if (!flying.did_catch)
+        {
+            target.parent = null;
+            if (!manual_position)
+                target.position = new Vector2(Random.Range(-15, 15), Random.Range(-7, 7));
+            else
+                manual_position = false;
+            flying.rb.velocity = speed * (target.position - transform.position).normalized;
+        }
+        else
+        {
+            target.parent = null;
+            target.position = Utils.Warp(Quaternion.Euler(0, 0, Random.Range(-180, 180)) * Vector3.right) * 20f;
+            flying.rb.velocity = speed * 3f * (target.position - transform.position).normalized;
+        }
 
         float angle = Vector3.SignedAngle(Vector3.right, flying.rb.velocity, Vector3.forward);
         if (angle < 0)
@@ -54,22 +67,20 @@ public class Fly : State
 
         flying.shadow.color = new Color(1, 1, 1, Mathf.Clamp01(1 - visuals.localPosition.y / Mathf.Min(height_no_shadow, max_height)));
 
-        if (Vector2.Distance(flying.transform.position, target_position) < 0.1f)
+        if (target.parent != flying.transform && Vector2.Distance(flying.transform.position, target.position) < 0.1f)
+        {
+            if (onReachTarget)
+            {
+                onReachTarget.ExecuteEvent();
+            }
+            //if (onReachTarget != null)
+            //{
+            //    onReachTarget.Invoke();
+            //    onReachTarget.RemoveAllListeners();
+            //    onReachTarget = null;
+            //}
             flying.rb.velocity = Vector2.zero;
-
-        if (!faded && time >= time_to_fade)
-        {
-            faded = true;
-
-            flying.fade.enabled = true;
-            flying.fade.start_alpha = 1;
-            flying.fade.end_alpha = high_height_alpha;
-            flying.fade.time = fade_duration;
-            flying.fade.Restart();
-        }
-        if (faded && !flying.health.invincible && time >= time_to_fade + fade_duration * 0.5f)
-        {
-            flying.health.invincible = true;
+            target.parent = flying.transform;
         }
     }
 

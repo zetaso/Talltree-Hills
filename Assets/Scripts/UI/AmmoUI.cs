@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AmmoUI : FloatingUI
 {
-
     public void SetAmmo(int ammo)
     {
         for (int i = 0; i < sprites.Count; i++)

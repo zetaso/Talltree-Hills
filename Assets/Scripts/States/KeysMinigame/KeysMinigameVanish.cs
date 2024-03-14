@@ -23,6 +23,8 @@ public class KeysMinigameVanish : State
         minigame.fade.Restart();
 
         fight_spider.is_complete = true;
+
+        Utils.Instance.player_health.SetDamaging(false);
     }
 
     public override void Do()

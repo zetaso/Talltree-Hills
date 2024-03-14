@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KeysMinigame : MonoBehaviour
 {
-    public State appear, play, vanish;
+    public State appear, play, vanish, die;
     public State state { get; private set; }
 
     public FightSpider fight_spider;
@@ -15,6 +15,7 @@ public class KeysMinigame : MonoBehaviour
         appear.Setup(this);
         play.Setup(this);
         vanish.Setup(this);
+        die.Setup(this);
 
         state = null;
     }

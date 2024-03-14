@@ -29,7 +29,7 @@ public class Reload : State
 
     public override State Next()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && Utils.Instance.pause.CanInput())
             return action.aim;
         else
             return action.hold;
@@ -39,7 +39,7 @@ public class Reload : State
     {
         base.Exit();
 
-        action.ammo = action.max_ammo;
+        action.ReloadAmmo();
         action.ammoUI.SetAmmo(action.ammo);
 
         if (movement.state != movement.run)

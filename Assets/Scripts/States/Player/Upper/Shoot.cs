@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Shoot : State
 {
@@ -12,6 +13,8 @@ public class Shoot : State
 
     public GameObject bullet_hit;
     public float bullet_hit_lifetime;
+
+    public UnityEvent onShootEvent;
 
     public override void Enter()
     {
@@ -41,11 +44,14 @@ public class Shoot : State
         flash.GetChild(flash_index).gameObject.SetActive(true);
         Destroy(flash.gameObject, 0.125f);
 
-        action.ammo--;
+        action.OnShootAmmo();
         action.ammoUI.SetAmmo(action.ammo);
         action.ammoUI.KeepVisible();
 
         Check();
+
+        if (onShootEvent != null)
+            onShootEvent.Invoke();
     }
 
     public override void Do()
@@ -65,7 +71,7 @@ public class Shoot : State
 
     public override State Next()
     {
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && Utils.Instance.pause.CanInput())
             return action.aim;
         else
             return action.hold;
@@ -83,7 +89,7 @@ public class Shoot : State
 
     void Check()
     {
-        float radius = (1 - crosshair.accuracy) * (crosshair.max_pixels - crosshair.min_pixels) / 8f;
+        float radius = crosshair.transform.GetChild(0).GetChild(0).localPosition.x - 0.3125f;
         Vector2 hit_point = (Vector2)crosshair.transform.position + UnityEngine.Random.insideUnitCircle * radius;
 
         Collider2D[] colliders = Physics2D.OverlapPointAll(hit_point);
@@ -92,8 +98,18 @@ public class Shoot : State
 
         foreach (var item in colliders)
         {
-            Health health = item.transform.root.GetComponent<Health>();
-            if (health && item.isTrigger)
+            if (!item.isTrigger)
+                continue;
+
+            Transform current = item.transform;
+            Health health = current.GetComponent<Health>();
+            while (health == null && transform.parent != null)
+            {
+                current = current.parent;
+                if (current)
+                    health = current.GetComponent<Health>();
+            }
+            if (health)
                 healths.Add(new Tuple<Health, int>(health, int.Parse(item.transform.name)));
         }
 
@@ -131,5 +147,11 @@ public class Shoot : State
         {
             bullet_sprite.color = Utils.Instance.palette[(int)ColorTag.LILA];
         }
+    }
+
+    public void ClearCallback()
+    {
+        onShootEvent.RemoveAllListeners();
+        onShootEvent = null;
     }
 }
